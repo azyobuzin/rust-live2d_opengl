@@ -4,7 +4,7 @@ extern crate live2d_opengl_sys as l2d;
 
 use std::error::Error;
 use std::fmt;
-use std::os::raw::{c_float, c_int};
+use std::os::raw::{c_float, c_int, c_uint};
 use std::path;
 use glium::{glutin, DisplayBuild, GlObject, Surface};
 
@@ -60,9 +60,13 @@ fn main() {
 
         unsafe {
             display.exec_in_context(|| {
-                // ここで state 変えまくってる気がするが、俺を許してよ～
+                const GL_ALL_ATTRIB_BITS: c_uint = 0x000fffff;
+                glPushAttrib(GL_ALL_ATTRIB_BITS);
+
                 glViewport(0, 0, w as c_int, h as c_int);
-                live2d_model.draw()
+                live2d_model.draw();
+
+                glPopAttrib();
             });
         }
 
@@ -166,4 +170,6 @@ fn resize(model: &mut l2d::Live2DModelWinGL, w: u32, h: u32) {
 
 extern "system" {
     fn glViewport(x: c_int, y: c_int, width: c_int, height: c_int);
+    fn glPushAttrib(mask: c_uint);
+    fn glPopAttrib();
 }
