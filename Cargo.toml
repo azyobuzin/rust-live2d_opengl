@@ -1,0 +1,2 @@
+[workspace]
+members = ["live2d_opengl-sys", "simple"]

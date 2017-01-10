@@ -1,0 +1,13 @@
+[package]
+name = "simple"
+version = "0.1.0"
+authors = ["azyobuzin <azyobuzin@users.sourceforge.jp>"]
+publish = false
+
+[dependencies]
+glium = "0.16"
+image = { version = "0.12", default-features = false, features = ["png_codec"] }
+
+[dependencies.live2d_opengl-sys]
+version = "0.1"
+path = "../live2d_opengl-sys"
