@@ -1,12 +1,10 @@
 use super::*;
 
 use std;
-use std::ffi::CStr;
-use std::os::raw::{c_char, c_float, c_int};
+use std::os::raw::{c_float, c_int};
 
 extern {
-    fn Live2DModelWinGL_loadModelFromFile(filepath: *const c_char) -> LDObjectPtr;
-    fn Live2DModelWinGL_loadModelFromBuffer(buf: *const c_void, bufSize: c_int) -> LDObjectPtr;
+    fn Live2DModelWinGL_loadModel(buf: *const c_void, bufSize: c_int) -> LDObjectPtr;
     fn Live2DModelWinGL_setTexture(p: LDObjectPtr, textureNo: c_int, openGLTextureNo: c_uint);
     fn Live2DModelWinGL_setMatrix(p: LDObjectPtr, matrix: *mut c_float);
 }
@@ -32,19 +30,9 @@ impl Live2DModelWinGL {
         Live2DModelWinGL { ptr: ptr }
     }
 
-    pub fn loadModelFromFile(filepath: &CStr) -> Result<Live2DModelWinGL, ()> {
-        let ptr = unsafe { Live2DModelWinGL_loadModelFromFile(filepath.as_ptr()) };
-
-        if ptr.is_null() {
-            Err(())
-        } else {
-            Ok(unsafe { Live2DModelWinGL::from_ptr(ptr) })
-        }
-    }
-
-    pub fn loadModelFromBuffer(buf: &[u8]) -> Result<Live2DModelWinGL, ()> {
+    pub fn loadModel(buf: &[u8]) -> Result<Live2DModelWinGL, ()> {
         let ptr = unsafe {
-            Live2DModelWinGL_loadModelFromBuffer(
+            Live2DModelWinGL_loadModel(
                 buf.as_ptr() as *const c_void,
                 buf.len() as c_int
             )

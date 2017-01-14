@@ -36,7 +36,7 @@ fn main() {
     let mut live2d_model = load_model(sample_dir.join("haru.moc")).unwrap();
 
     // TextureAny が Drop を実装しているので、テクスチャが削除されないように保持しておく
-    let textures = ["texture_00.png", "texture_01.png","texture_02.png"]
+    let textures = ["texture_00.png", "texture_01.png", "texture_02.png"]
         .iter()
         .map(|x| load_texture(&display, sample_dir.join(x)).unwrap())
         .collect::<Vec<_>>();
@@ -91,7 +91,7 @@ fn load_model<P: AsRef<path::Path>>(path: P) -> Result<l2d::Live2DModelWinGL, ()
         buf
     };
 
-    let model = l2d::Live2DModelWinGL::loadModelFromBuffer(&buf)?;
+    let model = l2d::Live2DModelWinGL::loadModel(&buf)?;
 
     if model.getCanvasWidth() == 0.0 || model.getCanvasHeight() == 0.0 {
         Err(())
