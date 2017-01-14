@@ -32,6 +32,10 @@ impl LDObject for ALive2DModel {
 }
 
 impl ALive2DModel {
+    pub unsafe fn from_ptr(ptr: LDObjectPtr) -> ALive2DModel {
+        ALive2DModel { ptr: ptr }
+    }
+
     pub fn getParamFloat(&self, paramID: &CStr) -> c_float {
         unsafe { ALive2DModel_getParamFloat(self.ptr, paramID.as_ptr()) }
     }

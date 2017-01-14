@@ -39,4 +39,13 @@ pub use self::a_live2d_model::*;
 mod live2d_model_wingl;
 pub use self::live2d_model_wingl::*;
 
+mod a_motion;
+pub use self::a_motion::*;
+
+mod live2d_motion;
+pub use self::live2d_motion::*;
+
+mod motion_queue_manager;
+pub use self::motion_queue_manager::*;
+
 pub mod ut_system;
