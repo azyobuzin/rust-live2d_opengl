@@ -2,6 +2,7 @@ use super::*;
 
 // extern { }
 
+#[derive(Debug)]
 pub struct AMotion {
     ptr: LDObjectPtr,
 }

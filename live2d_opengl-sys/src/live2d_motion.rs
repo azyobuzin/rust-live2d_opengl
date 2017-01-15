@@ -9,6 +9,7 @@ extern {
     fn Live2DMotion_isLoop(p: LDObjectPtr) -> w_bool;
 }
 
+#[derive(Debug)]
 pub struct Live2DMotion {
     ptr: LDObjectPtr,
 }

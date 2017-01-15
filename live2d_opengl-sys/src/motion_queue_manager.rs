@@ -11,6 +11,7 @@ extern {
     fn MotionQueueManager_stopAllMotions(p: LDObjectPtr);
 }
 
+#[derive(Debug)]
 pub struct MotionQueueManager {
     ptr: LDObjectPtr,
 }
@@ -36,9 +37,9 @@ impl MotionQueueManager {
         unsafe { MotionQueueManager::from_ptr(MotionQueueManager_new()) }
     }
 
-    pub fn startMotion(&mut self, motion: &AMotion, autoDelete: bool) -> c_int {
+    pub fn startMotion(&mut self, motion: LDObjectPtr, autoDelete: bool) -> c_int {
         let auto_delete = if autoDelete { 1 } else { 0 };
-        unsafe { MotionQueueManager_startMotion(self.ptr, motion.get_ptr(), auto_delete) }
+        unsafe { MotionQueueManager_startMotion(self.ptr, motion, auto_delete) }
     }
 
     pub fn updateParam(&mut self, model: &mut ALive2DModel) -> bool {

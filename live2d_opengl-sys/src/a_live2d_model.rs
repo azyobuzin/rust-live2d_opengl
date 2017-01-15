@@ -15,6 +15,7 @@ extern {
     fn ALive2DModel_isPremultipliedAlpha(p: LDObjectPtr) -> w_bool;
 }
 
+#[derive(Debug)]
 pub struct ALive2DModel {
     ptr: LDObjectPtr,
 }
@@ -40,19 +41,15 @@ impl ALive2DModel {
         unsafe { ALive2DModel_getParamFloat(self.ptr, paramID.as_ptr()) }
     }
 
-    pub fn setParamFloatWithWeight(&mut self, paramID: &CStr, value: c_float, weight: c_float) {
+    pub fn setParamFloat(&mut self, paramID: &CStr, value: c_float, weight: c_float) {
         unsafe { ALive2DModel_setParamFloat(self.ptr, paramID.as_ptr(), value, weight) }
-    }
-
-    pub fn setParamFloat(&mut self, paramID: &CStr, value: c_float) {
-        self.setParamFloatWithWeight(paramID, value, 1.0)
     }
 
     pub fn update(&mut self) {
         unsafe { ALive2DModel_update(self.ptr) }
     }
 
-    pub fn draw(&mut self) {
+    pub fn draw(&self) {
         unsafe { ALive2DModel_draw(self.ptr) }
     }
 
