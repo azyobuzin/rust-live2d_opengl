@@ -30,19 +30,11 @@ impl Live2DModelWinGL {
         Live2DModelWinGL { ptr: ptr }
     }
 
-    pub fn loadModel(buf: &[u8]) -> Result<Live2DModelWinGL, ()> {
-        let ptr = unsafe {
-            Live2DModelWinGL_loadModel(
-                buf.as_ptr() as *const c_void,
-                buf.len() as c_int
-            )
-        };
-
-        if ptr.is_null() {
-            Err(())
-        } else {
-            Ok(unsafe { Live2DModelWinGL::from_ptr(ptr) })
-        }
+    pub unsafe fn loadModel(buf: &[u8]) -> Live2DModelWinGL {
+        Live2DModelWinGL::from_ptr(Live2DModelWinGL_loadModel(
+            buf.as_ptr() as *const c_void,
+            buf.len() as c_int
+        ))
     }
 
     pub unsafe fn setTexture(&mut self, textureNo: c_int, openGLTextureNo: c_uint) {

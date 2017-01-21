@@ -33,24 +33,24 @@ impl MotionQueueManager {
         MotionQueueManager { ptr: ptr }
     }
 
-    pub fn new() -> MotionQueueManager {
-        unsafe { MotionQueueManager::from_ptr(MotionQueueManager_new()) }
+    pub unsafe fn new() -> MotionQueueManager {
+        MotionQueueManager::from_ptr(MotionQueueManager_new())
     }
 
-    pub fn startMotion(&mut self, motion: LDObjectPtr, autoDelete: bool) -> c_int {
+    pub unsafe fn startMotion(&mut self, motion: LDObjectPtr, autoDelete: bool) -> c_int {
         let auto_delete = if autoDelete { 1 } else { 0 };
-        unsafe { MotionQueueManager_startMotion(self.ptr, motion, auto_delete) }
+        MotionQueueManager_startMotion(self.ptr, motion, auto_delete)
     }
 
-    pub fn updateParam(&mut self, model: &mut ALive2DModel) -> bool {
-        unsafe { MotionQueueManager_updateParam(self.ptr, model.get_ptr()) != 0 }
+    pub unsafe fn updateParam(&mut self, model: &mut ALive2DModel) -> bool {
+        MotionQueueManager_updateParam(self.ptr, model.get_ptr()) != 0
     }
 
-    pub fn isFinished(&self) -> bool {
-        unsafe { MotionQueueManager_isFinished(self.ptr) != 0 }
+    pub unsafe fn isFinished(&self) -> bool {
+        MotionQueueManager_isFinished(self.ptr) != 0
     }
 
-    pub fn stopAllMotions(&mut self) {
-        unsafe { MotionQueueManager_stopAllMotions(self.ptr) }
+    pub unsafe fn stopAllMotions(&mut self) {
+        MotionQueueManager_stopAllMotions(self.ptr)
     }
 }

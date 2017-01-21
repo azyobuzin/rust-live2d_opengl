@@ -44,7 +44,7 @@ fn main() {
         unsafe { live2d_model.setTexture(i as c_int, x.get_id()); }
     }
 
-    live2d_model.setPremultipliedAlpha(false);
+    unsafe { live2d_model.setPremultipliedAlpha(false); }
     resize(&mut live2d_model, INITIAL_WIDTH, INITIAL_HEIGHT);
 
     let param_angle_x = std::ffi::CString::new("PARAM_ANGLE_X").unwrap();
@@ -54,9 +54,11 @@ fn main() {
         let (w, h) = target.get_dimensions();
         target.clear_color(0.0, 0.0, 1.0, 1.0);
 
-        let t = (l2d::ut_system::getUserTimeMSec() as f64) / 1000.0 * 2.0 * std::f64::consts::PI;
-        live2d_model.setParamFloat(&param_angle_x, (30.0 * (t / 3.0).sin()) as c_float, 1.0);
-        live2d_model.update();
+        unsafe {
+            let t = (l2d::ut_system::getUserTimeMSec() as f64) / 1000.0 * 2.0 * std::f64::consts::PI;
+            live2d_model.setParamFloat(&param_angle_x, (30.0 * (t / 3.0).sin()) as c_float, 1.0);
+            live2d_model.update();
+        }
 
         unsafe {
             display.exec_in_context(|| {
@@ -91,9 +93,9 @@ fn load_model<P: AsRef<path::Path>>(path: P) -> Result<l2d::Live2DModelWinGL, ()
         buf
     };
 
-    let model = l2d::Live2DModelWinGL::loadModel(&buf)?;
+    let model = unsafe { l2d::Live2DModelWinGL::loadModel(&buf) };
 
-    if model.getCanvasWidth() == 0.0 || model.getCanvasHeight() == 0.0 {
+    if unsafe { model.getCanvasWidth() == 0.0 || model.getCanvasHeight() == 0.0 } {
         Err(())
     } else {
         Ok(model)
@@ -155,8 +157,8 @@ fn load_texture<F, P>(facade: &F, path: P)
 
 fn resize(model: &mut l2d::Live2DModelWinGL, w: u32, h: u32) {
     let aspect = (w as f32) / (h as f32);
-    let sx = 2.0 / model.getCanvasWidth();
-    let sy = -2.0 / model.getCanvasWidth() * aspect;
+    let sx = 2.0 / unsafe { model.getCanvasWidth() };
+    let sy = -2.0 / unsafe { model.getCanvasWidth() } * aspect;
     let x = -1.0f32;
     let y = 1.0f32;
     let mut matrix = [

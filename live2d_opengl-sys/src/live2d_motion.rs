@@ -31,22 +31,19 @@ impl Live2DMotion {
         Live2DMotion { ptr: ptr }
     }
 
-    pub fn loadMotion(buf: &[u8]) -> Live2DMotion {
-        unsafe {
-            Live2DMotion::from_ptr(Live2DMotion_loadMotion(
-                buf.as_ptr() as *const c_void,
-                buf.len() as c_int
-            ))
-        }
+    pub unsafe fn loadMotion(buf: &[u8]) -> Live2DMotion {
+        Live2DMotion::from_ptr(Live2DMotion_loadMotion(
+            buf.as_ptr() as *const c_void,
+            buf.len() as c_int
+        ))
     }
 
-    pub fn setLoop(&mut self, _loop: bool) {
-        let x = if _loop { 1 } else { 0 };
-        unsafe { Live2DMotion_setLoop(self.ptr, x) }
+    pub unsafe fn setLoop(&mut self, _loop: bool) {
+        Live2DMotion_setLoop(self.ptr, if _loop { 1 } else { 0 })
     }
 
-    pub fn isLoop(&self) -> bool {
-        unsafe { Live2DMotion_isLoop(self.ptr) != 0 }
+    pub unsafe fn isLoop(&self) -> bool {
+        Live2DMotion_isLoop(self.ptr) != 0
     }
 }
 
