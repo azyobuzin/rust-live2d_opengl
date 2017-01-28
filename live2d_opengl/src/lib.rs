@@ -38,11 +38,14 @@ impl Live2D {
         Live2DModel::load(self, data)
     }
 
+    // TODO: いつかやる
+    /*
     #[cfg(feature = "model-json")]
     pub fn load_model_json<'a, 'b, P>(&'a self, path: P) -> Result<Live2DModel<'a, 'b>, ()> {
         // TODO: エラー型
         unimplemented!()
     }
+    */
 
     pub fn load_motion<'a>(&'a self, data: &[u8]) -> Live2DMotion {
         Live2DMotion::load(self, data)

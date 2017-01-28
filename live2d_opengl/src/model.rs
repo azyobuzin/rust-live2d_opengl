@@ -23,36 +23,44 @@ impl<'a, 'b> Live2DModel<'a, 'b> {
     }
 
     pub fn load(global: &'a super::Live2D, data: &[u8]) -> Result<Live2DModel<'a, 'b>, ()> {
-        let model = sys::Live2DModelWinGL::loadModel(data)?;
-        if model.getCanvasWidth() == 0.0 || model.getCanvasHeight() == 0.0 {
-            Err(())
-        } else {
-            Ok(Live2DModel::new(global, model))
+        unsafe {
+            let model = sys::Live2DModelWinGL::loadModel(data);
+            if model.getCanvasWidth() == 0.0 || model.getCanvasHeight() == 0.0 {
+                Err(())
+            } else {
+                Ok(Live2DModel::new(global, model))
+            }
         }
     }
 
     pub fn get_param(&self, param_id: &str) -> f32 {
-        self.inner.getParamFloat(unsafe { &CString::from_vec_unchecked(param_id.into()) })
+        unsafe {
+            self.inner.getParamFloat(&CString::from_vec_unchecked(param_id.into()))
+        }
     }
 
     pub fn set_param(&mut self, param_id: &str, value: f32) {
-        self.inner.setParamFloat(
-            unsafe { &CString::from_vec_unchecked(param_id.into()) },
-            value,
-            1.0
-        )
+        unsafe {
+            self.inner.setParamFloat(
+                &CString::from_vec_unchecked(param_id.into()),
+                value,
+                1.0
+            )
+        }
     }
 
     pub fn set_param_with_weight(&mut self, param_id: &str, value: f32, weight: f32) {
-        self.inner.setParamFloat(
-            unsafe { &CString::from_vec_unchecked(param_id.into()) },
-            value,
-            weight
-        )
+        unsafe {
+            self.inner.setParamFloat(
+                &CString::from_vec_unchecked(param_id.into()),
+                value,
+                weight
+            )
+        }
     }
 
     pub fn update(&mut self) {
-        self.inner.update();
+        unsafe { self.inner.update() }
     }
 
     pub fn draw(&self, context: &glium::backend::Context, draw_parameters: &super::Live2DDrawParameters) {
@@ -84,19 +92,19 @@ impl<'a, 'b> Live2DModel<'a, 'b> {
     }
 
     pub fn width(&self) -> f32 {
-        self.inner.getCanvasWidth()
+        unsafe { self.inner.getCanvasWidth() }
     }
 
     pub fn height(&self) -> f32 {
-        self.inner.getCanvasHeight()
+        unsafe { self.inner.getCanvasHeight() }
     }
 
     pub fn set_premultiplied_alpha(&mut self, b: bool) {
-        self.inner.setPremultipliedAlpha(b)
+        unsafe { self.inner.setPremultipliedAlpha(b) }
     }
 
     pub fn is_premultiplied_alpha(&self) -> bool {
-        self.inner.isPremultipliedAlpha()
+        unsafe { self.inner.isPremultipliedAlpha() }
     }
 
     pub fn set_texture(&mut self, texture_no: i32, texture: Box<ModelTexture<'b>>) {

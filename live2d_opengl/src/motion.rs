@@ -18,16 +18,18 @@ impl<'a> Live2DMotion<'a> {
     }
 
     pub fn load(global: &'a super::Live2D, data: &[u8]) -> Live2DMotion<'a> {
-        // 失敗したかどうか判断できない……
-        Live2DMotion::new(global, sys::Live2DMotion::loadMotion(data))
+        unsafe {
+            // 失敗したかどうか判断できない……
+            Live2DMotion::new(global, sys::Live2DMotion::loadMotion(data))
+        }
     }
 
     pub fn set_loop(&mut self, b: bool) {
-        self.inner.setLoop(b)
+        unsafe { self.inner.setLoop(b) }
     }
 
     pub fn is_loop(&self) -> bool {
-        self.inner.isLoop()
+        unsafe { self.inner.isLoop() }
     }
 }
 
@@ -54,7 +56,7 @@ impl<'a> MotionQueueManager<'a> {
     pub fn new(global: &'a super::Live2D) -> MotionQueueManager<'a> {
         MotionQueueManager {
             global: global,
-            inner: sys::MotionQueueManager::new(),
+            inner: unsafe { sys::MotionQueueManager::new() },
         }
     }
 
@@ -62,28 +64,30 @@ impl<'a> MotionQueueManager<'a> {
     pub fn start_motion<'b, M>(&'b mut self, motion: M)
         where M: Into<Motion<'a, 'b>>
     {
-        match motion.into() {
-            Motion::Borrowed(x) => {
-                self.inner.startMotion(x.inner.get_ptr(), false);
-            }
-            Motion::Owned(x) => {
-                let p = x.inner.get_ptr();
-                mem::forget(x); // Live2D 側に破棄させる
-                self.inner.startMotion(p, true);
+        unsafe {
+            match motion.into() {
+                Motion::Borrowed(x) => {
+                    self.inner.startMotion(x.inner.get_ptr(), false);
+                }
+                Motion::Owned(x) => {
+                    let p = x.inner.get_ptr();
+                    mem::forget(x); // Live2D 側に破棄させる
+                    self.inner.startMotion(p, true);
+                }
             }
         }
     }
 
     pub fn update_model(&mut self, model: &mut super::Live2DModel) -> bool {
-        self.inner.updateParam(model.as_mut())
+        unsafe { self.inner.updateParam(model.as_mut()) }
     }
 
     pub fn is_finished(&self) -> bool {
-        self.inner.isFinished()
+        unsafe { self.inner.isFinished() }
     }
 
     pub fn stop_all_motions(&mut self) {
-        self.inner.stopAllMotions()
+        unsafe { self.inner.stopAllMotions() }
     }
 }
 
